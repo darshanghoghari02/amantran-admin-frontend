@@ -579,8 +579,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
             setSearchQuery('');
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${activeTab === 'staff'
-              ? 'bg-wedding-charcoal-dark text-wedding-gold-light shadow-md'
-              : 'text-gray-500 hover:text-wedding-charcoal-dark hover:bg-white/50'
+            ? 'bg-wedding-charcoal-dark text-wedding-gold-light shadow-md'
+            : 'text-gray-500 hover:text-wedding-charcoal-dark hover:bg-white/50'
             }`}
         >
           <Shield className="w-3.5 h-3.5" />
@@ -596,8 +596,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
             setSearchQuery('');
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${activeTab === 'app_users'
-              ? 'bg-wedding-charcoal-dark text-wedding-gold-light shadow-md'
-              : 'text-gray-500 hover:text-wedding-charcoal-dark hover:bg-white/50'
+            ? 'bg-wedding-charcoal-dark text-wedding-gold-light shadow-md'
+            : 'text-gray-500 hover:text-wedding-charcoal-dark hover:bg-white/50'
             }`}
         >
           <Smartphone className="w-3.5 h-3.5" />
@@ -723,8 +723,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                                 <button
                                   onClick={() => handleToggleBlock(user.id, user.isBlocked)}
                                   className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all ${user.isBlocked
-                                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
-                                      : 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
+                                    ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
+                                    : 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
                                     }`}
                                   title={user.isBlocked ? 'Restore User' : 'Suspend User'}
                                 >
@@ -900,8 +900,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                                   <button
                                     onClick={() => handleToggleBlock(user.id, user.isBlocked)}
                                     className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all ${user.isBlocked
-                                        ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
-                                        : 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
+                                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
+                                      : 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
                                       }`}
                                     title={user.isBlocked ? 'Restore User' : 'Suspend User'}
                                   >
@@ -976,8 +976,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                   }}
                   placeholder="e.g. Ramesh Patel"
                   className={`w-full px-4 py-3 rounded-xl bg-[#FFF5F6]/40 border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 focus:bg-white font-semibold transition-all ${errors.displayName
-                      ? 'border-red-500 focus:ring-red-500/20'
-                      : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
+                    ? 'border-red-500 focus:ring-red-500/20'
+                    : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
                     }`}
                 />
                 {errors.displayName && (
@@ -1003,8 +1003,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                   }}
                   placeholder="user@amantran.com"
                   className={`w-full px-4 py-3 rounded-xl bg-[#FFF5F6]/40 border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 focus:bg-white font-semibold transition-all ${errors.email
-                      ? 'border-red-500 focus:ring-red-500/20'
-                      : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
+                    ? 'border-red-500 focus:ring-red-500/20'
+                    : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
                     }`}
                 />
                 {errors.email && (
@@ -1032,8 +1032,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                   }}
                   placeholder="Enter login password..."
                   className={`w-full px-4 py-3 rounded-xl bg-[#FFF5F6]/40 border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 focus:bg-white font-mono font-semibold transition-all ${errors.password
-                      ? 'border-red-500 focus:ring-red-500/20'
-                      : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
+                    ? 'border-red-500 focus:ring-red-500/20'
+                    : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
                     }`}
                 />
                 {errors.password && (
@@ -1073,8 +1073,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                   }}
                   disabled={!!editingUser && !canAssignRoles}
                   className={`w-full px-4 py-3 rounded-xl bg-[#FFF5F6]/40 border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 font-semibold transition-all disabled:opacity-60 disabled:bg-gray-50 ${errors.roleId
-                      ? 'border-red-500 focus:ring-red-500/20'
-                      : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
+                    ? 'border-red-500 focus:ring-red-500/20'
+                    : 'border-[#FFCAD2]/60 focus:ring-wedding-pink-dark/25'
                     }`}
                 >
                   {roles.map(r => (
@@ -1263,8 +1263,8 @@ export default function Users({ currentUser }: UsersComponentProps) {
                                 <Star
                                   key={i}
                                   className={`w-3 h-3 ${i < r.rating
-                                      ? 'text-amber-500 fill-amber-400'
-                                      : 'text-gray-200'
+                                    ? 'text-amber-500 fill-amber-400'
+                                    : 'text-gray-200'
                                     }`}
                                 />
                               ))}

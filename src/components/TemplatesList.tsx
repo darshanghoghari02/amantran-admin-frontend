@@ -175,7 +175,7 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
         newErrors.singlePurchasePrice = 'Single purchase price must be a non-negative number.';
       }
     }
-    
+
     // Thumbnail and page background checks
     if (!editingTemplate) {
       if (!thumbnailFile) {
@@ -185,7 +185,7 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
         newErrors.bgFiles = 'At least one page background file is required for new templates.';
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -1835,14 +1835,14 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
       if (res.ok) {
         const savedTemplate = await res.json();
         const templateId = savedTemplate.id || (editingTemplate ? editingTemplate.id : null);
-        
+
         if (templateId) {
           // Update the plan inclusions for this template!
           await Promise.all(plans.map(async (plan) => {
             const isPlanSelected = selectedPlanIds.includes(plan.id);
             const currentTemplateIds = plan.includedTemplateIds || [];
             const isTemplateAlreadyInPlan = currentTemplateIds.includes(templateId);
-            
+
             let newTemplateIds = [...currentTemplateIds];
             if (isPlanSelected && !isTemplateAlreadyInPlan) {
               newTemplateIds.push(templateId);
@@ -1851,7 +1851,7 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
             } else {
               return;
             }
-            
+
             await fetch(`${API_URL}/api/subscriptions/${plan.id}`, {
               method: 'PUT',
               headers: authHeaders,
@@ -2204,7 +2204,7 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                         )}
                       </>
                     ) : (
-                      <span className="px-2 py-0.5 bg-wedding-charcoal-light/95 text-white text-[9px] font-bold rounded-md uppercase shadow-sm">
+                      <span className="px-2 pt-1 py-0.5 bg-wedding-charcoal-light/95 text-white text-[9px] font-bold rounded-md uppercase shadow-sm">
                         Free
                       </span>
                     )}
@@ -2357,11 +2357,10 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                       }
                     }}
                     placeholder="e.g. Royal Gold Wedding"
-                    className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${
-                      errors.name 
-                        ? 'border-red-500 focus:ring-red-500/20' 
-                        : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
-                    }`}
+                    className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${errors.name
+                      ? 'border-red-500 focus:ring-red-500/20'
+                      : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
+                      }`}
                   />
                   {errors.name && (
                     <p className="text-xs text-red-500 font-semibold mt-1">{errors.name}</p>
@@ -2384,11 +2383,10 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                       }
                     }}
                     placeholder="e.g. royal_gold_wedding"
-                    className={`w-full px-4 py-3 rounded-2xl text-sm font-mono focus:outline-none focus:ring-2 ${
-                      errors.slug 
-                        ? 'bg-white border-red-500 focus:ring-red-500/20 text-wedding-charcoal-dark' 
-                        : 'bg-gray-50 border border-wedding-pink-medium/30 text-wedding-charcoal-dark/70'
-                    }`}
+                    className={`w-full px-4 py-3 rounded-2xl text-sm font-mono focus:outline-none focus:ring-2 ${errors.slug
+                      ? 'bg-white border-red-500 focus:ring-red-500/20 text-wedding-charcoal-dark'
+                      : 'bg-gray-50 border border-wedding-pink-medium/30 text-wedding-charcoal-dark/70'
+                      }`}
                   />
                   {errors.slug && (
                     <p className="text-xs text-red-500 font-semibold mt-1">{errors.slug}</p>
@@ -2412,11 +2410,10 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${
-                      errors.categoryId 
-                        ? 'border-red-500 focus:ring-red-500/20' 
-                        : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
-                    }`}
+                    className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${errors.categoryId
+                      ? 'border-red-500 focus:ring-red-500/20'
+                      : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
+                      }`}
                   >
                     <option value="">Select Category</option>
                     {categories.map((c) => (
@@ -2514,7 +2511,7 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                     <Sparkles className="w-4 h-4 text-amber-700 fill-amber-300" />
                     Pricing & Subscription Plans
                   </h5>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
                     {/* Single Purchase Price */}
                     <div className="space-y-1.5 sm:col-span-1">
@@ -2535,11 +2532,10 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                               });
                             }
                           }}
-                          className={`w-full pl-8 pr-4 py-2.5 rounded-xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 font-semibold ${
-                            errors.singlePurchasePrice 
-                              ? 'border-red-500 focus:ring-red-500/20' 
-                              : 'border-wedding-pink-medium/30 focus:ring-wedding-pink-dark/20'
-                          }`}
+                          className={`w-full pl-8 pr-4 py-2.5 rounded-xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 font-semibold ${errors.singlePurchasePrice
+                            ? 'border-red-500 focus:ring-red-500/20'
+                            : 'border-wedding-pink-medium/30 focus:ring-wedding-pink-dark/20'
+                            }`}
                         />
                       </div>
                       {errors.singlePurchasePrice && (
@@ -2581,11 +2577,10 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Template Thumbnail</label>
-                  <label className={`border cursor-pointer p-4 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${
-                    errors.thumbnailFile 
-                      ? 'border-red-500 hover:bg-red-50/10' 
-                      : 'border-wedding-pink-medium/40 hover:bg-wedding-pink-light/20'
-                  }`}>
+                  <label className={`border cursor-pointer p-4 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${errors.thumbnailFile
+                    ? 'border-red-500 hover:bg-red-50/10'
+                    : 'border-wedding-pink-medium/40 hover:bg-wedding-pink-light/20'
+                    }`}>
                     <Upload className="w-5 h-5 text-wedding-pink-dark mb-1" />
                     <span className="text-[11px] font-bold text-wedding-charcoal-dark text-center">
                       {thumbnailFile ? thumbnailFile.name : 'Choose Thumbnail File'}
@@ -2615,11 +2610,10 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                 {!editingTemplate && (
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Page Backgrounds (Multiple)</label>
-                    <label className={`border cursor-pointer p-4 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${
-                      errors.bgFiles 
-                        ? 'border-red-500 hover:bg-red-50/10' 
-                        : 'border-wedding-pink-medium/40 hover:bg-wedding-pink-light/20'
-                    }`}>
+                    <label className={`border cursor-pointer p-4 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${errors.bgFiles
+                      ? 'border-red-500 hover:bg-red-50/10'
+                      : 'border-wedding-pink-medium/40 hover:bg-wedding-pink-light/20'
+                      }`}>
                       <Upload className="w-5 h-5 text-wedding-pink-dark mb-1" />
                       <span className="text-[11px] font-bold text-wedding-charcoal-dark text-center">
                         {bgFiles ? `${bgFiles.length} files selected` : 'Select Page Backgrounds'}
