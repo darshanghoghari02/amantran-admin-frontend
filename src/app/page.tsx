@@ -23,6 +23,7 @@ export default function RootPage() {
   // Navigation & Session states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [sessionChecking, setSessionChecking] = useState(true);
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [isFirebase, setIsFirebase] = useState(false);
   const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
@@ -36,6 +37,26 @@ export default function RootPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { setTemplate } = useCanvasStore();
+
+  // Restore session from localStorage on mount
+  useEffect(() => {
+    const storedSession = localStorage.getItem('amantran_admin_session');
+    if (storedSession) {
+      try {
+        const { user, loginTime } = JSON.parse(storedSession);
+        const oneDay = 24 * 60 * 60 * 1000;
+        if (Date.now() - loginTime < oneDay) {
+          setCurrentUser(user);
+          setIsLoggedIn(true);
+        } else {
+          localStorage.removeItem('amantran_admin_session');
+        }
+      } catch (err) {
+        console.error('Failed to parse persisted session:', err);
+      }
+    }
+    setSessionChecking(false);
+  }, []);
 
   // Check backend server connection on boot
   useEffect(() => {
@@ -128,6 +149,16 @@ export default function RootPage() {
         .then(updated => {
           if (updated && updated.displayName) {
             setCurrentUser(updated);
+            const storedSession = localStorage.getItem('amantran_admin_session');
+            if (storedSession) {
+              try {
+                const session = JSON.parse(storedSession);
+                session.user = updated;
+                localStorage.setItem('amantran_admin_session', JSON.stringify(session));
+              } catch (e) {
+                console.error('Failed to update persisted session:', e);
+              }
+            }
           }
         })
         .catch(err => console.log('Dynamic user sync:', err.message));
@@ -150,6 +181,11 @@ export default function RootPage() {
         const user = await res.json();
         setCurrentUser(user);
         setIsLoggedIn(true);
+        // Persist session for 24 hours
+        localStorage.setItem(
+          'amantran_admin_session',
+          JSON.stringify({ user, loginTime: Date.now() })
+        );
       } else {
         const err = await res.json();
         setAuthError(err.error || 'Authentication failed. Incorrect email or password.');
@@ -161,6 +197,31 @@ export default function RootPage() {
       setLoggingIn(false);
     }
   };
+
+  // If we are still checking the session, show a loading placeholder to prevent flash
+  if (sessionChecking) {
+    return (
+      <div className="min-h-screen bg-[#FFF0F2] flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Decorative background concentric circles matching app branding */}
+        <div className="absolute top-[-10%] left-[-10%] w-[45%] aspect-square rounded-full border border-[#FFCAD2]/30 pointer-events-none z-0"></div>
+        <div className="absolute bottom-[-15%] right-[-15%] w-[50%] aspect-square rounded-full border border-[#FFCAD2]/25 pointer-events-none z-0"></div>
+        
+        <div className="z-10 flex flex-col items-center gap-4 text-center">
+          <div className="w-16 h-16 rounded-[22px] bg-[#FF3E5C] flex items-center justify-center shadow-lg shadow-wedding-pink-dark/20 animate-pulse">
+            <Heart className="w-8 h-8 text-white fill-white animate-pulse" />
+          </div>
+          <div>
+            <h1 className="font-extrabold text-lg tracking-wide text-wedding-charcoal-dark uppercase">
+              AMANTRAN <span className="text-wedding-pink-dark">ADMIN</span>
+            </h1>
+            <p className="text-[10px] text-gray-500 font-semibold mt-1 animate-pulse">
+              Restoring secure administrator session...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Login view layout
   if (!isLoggedIn) {
@@ -338,6 +399,7 @@ export default function RootPage() {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
         onLogout={() => {
+          localStorage.removeItem('amantran_admin_session');
           setIsLoggedIn(false);
           setCurrentUser(null);
           setCurrentTab('dashboard');
