@@ -29,8 +29,8 @@ export default function RootPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Auth Form State
-  const [email, setEmail] = useState('admin@amantran.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -244,7 +244,8 @@ export default function RootPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@amantran.com"
+                  placeholder="superadmin@amantran.com"
+                  autoComplete="email"
                   className="w-full pl-12 pr-4 py-3 bg-[#FFF5F6] border border-[#FFCAD2] rounded-2xl text-wedding-charcoal-dark placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wedding-pink-dark/30 focus:bg-white text-sm font-semibold transition-all"
                   required
                 />
@@ -260,6 +261,7 @@ export default function RootPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   className="w-full pl-12 pr-12 py-3 bg-[#FFF5F6] border border-[#FFCAD2] rounded-2xl text-wedding-charcoal-dark placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wedding-pink-dark/30 focus:bg-white text-sm font-semibold transition-all"
                   required
                 />
@@ -283,16 +285,6 @@ export default function RootPage() {
             </button>
           </form>
 
-          {/* Dev credentials tip */}
-          <div className="flex items-center justify-center gap-1.5 pt-4 border-t border-wedding-pink-medium/20 text-[10px] text-gray-500 font-semibold leading-relaxed">
-            <span className="flex items-center gap-1 text-green-600">
-              <span className="p-0.5 bg-green-50 rounded border border-green-200"><ShieldCheck className="w-3 h-3" /></span>
-              Local Developer Credentials:
-            </span>
-            <code className="text-wedding-pink-dark font-bold font-mono">admin@amantran.com</code>
-            <span>|</span>
-            <code className="text-wedding-pink-dark font-bold font-mono">admin123</code>
-          </div>
         </div>
       </div>
     );
