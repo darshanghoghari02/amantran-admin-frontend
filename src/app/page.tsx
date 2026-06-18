@@ -205,7 +205,7 @@ export default function RootPage() {
         {/* Decorative background concentric circles matching app branding */}
         <div className="absolute top-[-10%] left-[-10%] w-[45%] aspect-square rounded-full border border-[#FFCAD2]/30 pointer-events-none z-0"></div>
         <div className="absolute bottom-[-15%] right-[-15%] w-[50%] aspect-square rounded-full border border-[#FFCAD2]/25 pointer-events-none z-0"></div>
-        
+
         <div className="z-10 flex flex-col items-center gap-4 text-center">
           <div className="w-16 h-16 rounded-[22px] bg-[#FF3E5C] flex items-center justify-center shadow-lg shadow-wedding-pink-dark/20 animate-pulse">
             <Heart className="w-8 h-8 text-white fill-white animate-pulse" />
@@ -305,7 +305,7 @@ export default function RootPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="superadmin@amantran.com"
+                  placeholder="admin@gmail.com"
                   autoComplete="email"
                   className="w-full pl-12 pr-4 py-3 bg-[#FFF5F6] border border-[#FFCAD2] rounded-2xl text-wedding-charcoal-dark placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wedding-pink-dark/30 focus:bg-white text-sm font-semibold transition-all"
                   required
