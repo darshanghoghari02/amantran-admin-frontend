@@ -9,6 +9,16 @@ const nextConfig = {
         port: '5000',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'tan-quetzal-596149.hostingersite.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.hostingersite.com',
+        pathname: '/**',
+      },
     ],
   },
 };
