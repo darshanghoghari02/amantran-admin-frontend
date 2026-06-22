@@ -21,7 +21,9 @@ import {
   Sparkles,
   Calendar,
   DollarSign,
-  Award
+  Award,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { User, Role, SubscriptionPlan, Rating } from '../types';
 import { useToastStore } from '../store/toastStore';
@@ -110,6 +112,15 @@ export default function Users({ currentUser }: UsersComponentProps) {
   const [subIsActive, setSubIsActive] = useState(true);
   const [subSaving, setSubSaving] = useState(false);
   const [subRevoking, setSubRevoking] = useState(false);
+
+  // Change Password Modal States
+  const [isPwdModalOpen, setIsPwdModalOpen] = useState(false);
+  const [pwdTargetUser, setPwdTargetUser] = useState<User | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [pwdSaving, setPwdSaving] = useState(false);
+  const [pwdError, setPwdError] = useState('');
 
   // Permission helper
   const hasPermission = (permission: string): boolean => {
@@ -467,6 +478,52 @@ export default function Users({ currentUser }: UsersComponentProps) {
     }
   };
 
+  // Open change password modal
+  const openPwdModal = (user: User) => {
+    setPwdTargetUser(user);
+    setNewPassword('');
+    setConfirmPassword('');
+    setShowNewPwd(false);
+    setPwdError('');
+    setIsPwdModalOpen(true);
+  };
+
+  // Handle password change submit
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdError('');
+
+    if (!newPassword || newPassword.length < 6) {
+      setPwdError('Password must be at least 6 characters.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwdError('Passwords do not match.');
+      return;
+    }
+
+    if (!pwdTargetUser) return;
+    setPwdSaving(true);
+    try {
+      const res = await fetch(`${API_URL}/api/users/${pwdTargetUser.id}/change-password`, {
+        method: 'POST',
+        headers: authHeaders,
+        body: JSON.stringify({ newPassword })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        addToast(`Password reset successfully for ${pwdTargetUser.displayName || pwdTargetUser.email}!`, 'success');
+        setIsPwdModalOpen(false);
+      } else {
+        setPwdError(data.error || 'Failed to change password.');
+      }
+    } catch (err) {
+      setPwdError('Network error. Please try again.');
+    } finally {
+      setPwdSaving(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) {
@@ -716,6 +773,17 @@ export default function Users({ currentUser }: UsersComponentProps) {
                                   title="Edit User Profile"
                                 >
                                   <Edit3 className="w-4 h-4" />
+                                </button>
+                              )}
+
+                              {/* Change Password Button - Super Admin only */}
+                              {hasPermission('*') && (
+                                <button
+                                  onClick={() => openPwdModal(user)}
+                                  className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border border-transparent hover:border-indigo-100"
+                                  title="Reset Password"
+                                >
+                                  <Lock className="w-4 h-4" />
                                 </button>
                               )}
 
@@ -1449,6 +1517,128 @@ export default function Users({ currentUser }: UsersComponentProps) {
               </form>
 
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== Change Password Modal ===== */}
+      {isPwdModalOpen && pwdTargetUser && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-[28px] shadow-2xl w-full max-w-md border border-gray-100 animate-slideUp">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-wedding-charcoal-dark text-base">Reset Password</h3>
+                  <p className="text-[10px] text-gray-400 font-semibold mt-0.5">
+                    {pwdTargetUser.displayName || pwdTargetUser.email}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsPwdModalOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-400" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleChangePassword} className="p-6 space-y-4">
+              {/* Info banner */}
+              <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-xl text-[11px] font-semibold text-indigo-700">
+                🔐 As Super Admin, you can reset this user's password directly without requiring the current password.
+              </div>
+
+              {pwdError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-semibold text-red-600">
+                  ✕ {pwdError}
+                </div>
+              )}
+
+              {/* New Password */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                  New Password *
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPwd ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password (min. 6 chars)"
+                    className="w-full px-4 py-3 bg-[#FFF5F6]/40 border border-[#FFCAD2]/60 rounded-xl text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400/25 focus:bg-white font-semibold transition-all pr-12"
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPwd(!showNewPwd)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showNewPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                  Confirm New Password *
+                </label>
+                <input
+                  type={showNewPwd ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter new password"
+                  className="w-full px-4 py-3 bg-[#FFF5F6]/40 border border-[#FFCAD2]/60 rounded-xl text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400/25 focus:bg-white font-semibold transition-all"
+                  required
+                />
+              </div>
+
+              {/* Password strength indicator */}
+              {newPassword.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1 flex-1">
+                    {[1,2,3,4].map(i => (
+                      <div
+                        key={i}
+                        className={`h-1 flex-1 rounded-full transition-all ${
+                          newPassword.length >= i * 3
+                            ? i <= 1 ? 'bg-red-400' : i <= 2 ? 'bg-orange-400' : i <= 3 ? 'bg-yellow-400' : 'bg-green-500'
+                            : 'bg-gray-200'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[10px] font-bold text-gray-400">
+                    {newPassword.length < 4 ? 'Weak' : newPassword.length < 8 ? 'Fair' : newPassword.length < 12 ? 'Good' : 'Strong'}
+                  </span>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="pt-2 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsPwdModalOpen(false)}
+                  className="flex-1 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={pwdSaving}
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  {pwdSaving ? 'Resetting...' : 'Reset Password'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
