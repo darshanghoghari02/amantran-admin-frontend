@@ -570,7 +570,7 @@ export default function CanvasArea() {
       const draggedPage = pages[dragItem.current];
       pages.splice(dragItem.current, 1);
       pages.splice(dragOverItem.current, 0, draggedPage);
-      
+
       reorderPages(pages);
       selectPage(dragOverItem.current);
     }
@@ -816,9 +816,7 @@ export default function CanvasArea() {
                     {/* ── Text ── */}
                     {isText ? (
                       (() => {
-                        const originalFontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
-                        const isLegacy = originalFontFamily.toLowerCase().startsWith('kap');
-                        const fontFamily = (isLegacy && selectedLanguage !== 'Gujarati') ? 'Inter' : originalFontFamily;
+                        const fontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
                         return (
                           <div
                             className="text-actual-content"
@@ -950,12 +948,12 @@ export default function CanvasArea() {
             Drag cards to reorder pages
           </span>
         </div>
-        
+
         <div className="flex items-center gap-3 overflow-x-auto pb-1">
           {template.pages.map((page, idx) => {
             const isPageSelected = idx === selectedPageIndex;
             const scale = 0.055; // 1080 * 0.055 = 59.4px, 1920 * 0.055 = 105.6px
-            
+
             return (
               <div
                 key={page.id}
@@ -964,11 +962,10 @@ export default function CanvasArea() {
                 onDragOver={(e) => handleDragOver(e, idx)}
                 onDrop={(e) => handleDrop(e, idx)}
                 onClick={() => selectPage(idx)}
-                className={`relative cursor-pointer transition-all duration-250 flex-shrink-0 group ${
-                  isPageSelected
+                className={`relative cursor-pointer transition-all duration-250 flex-shrink-0 group ${isPageSelected
                     ? 'ring-2 ring-wedding-pink-dark scale-[1.03] shadow-lg shadow-wedding-pink-dark/20'
                     : 'hover:ring-1 hover:ring-white/20'
-                }`}
+                  }`}
                 style={{
                   width: 60,
                   height: 106,
@@ -985,7 +982,7 @@ export default function CanvasArea() {
                     className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                   />
                 )}
-                
+
                 {/* Scaled elements representation */}
                 {(page.elements || []).map((el) => {
                   const isElText = el.type === 'text';
@@ -1014,7 +1011,7 @@ export default function CanvasArea() {
               </div>
             );
           })}
-          
+
           {/* Add Page Card */}
           <button
             type="button"

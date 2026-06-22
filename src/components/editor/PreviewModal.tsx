@@ -1,14 +1,14 @@
 import { API_URL, getImageUrl } from '@/config';
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  Smartphone, 
-  Monitor, 
-  Play, 
-  Pause, 
-  ChevronLeft, 
-  ChevronRight, 
-  Languages, 
+import {
+  X,
+  Smartphone,
+  Monitor,
+  Play,
+  Pause,
+  ChevronLeft,
+  ChevronRight,
+  Languages,
   Sparkles,
   Music,
   Volume2,
@@ -44,10 +44,10 @@ function renderFormattedText(text: string, fontFamily: string) {
   });
 }
 
-export default function PreviewModal({ 
-  template, 
-  selectedLanguage, 
-  setSelectedLanguage, 
+export default function PreviewModal({
+  template,
+  selectedLanguage,
+  setSelectedLanguage,
   onClose,
   activeLanguages
 }: PreviewModalProps) {
@@ -134,22 +134,20 @@ export default function PreviewModal({
           <div className="flex items-center bg-[#251B1E] border border-white/5 p-1.5 rounded-2xl gap-1">
             <button
               onClick={() => setViewMode('mobile')}
-              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 ${
-                viewMode === 'mobile'
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 ${viewMode === 'mobile'
                   ? 'bg-wedding-pink-dark text-white shadow-md'
                   : 'text-gray-400 hover:text-white'
-              }`}
+                }`}
             >
               <Smartphone className="w-4 h-4" />
               Mobile Frame
             </button>
             <button
               onClick={() => setViewMode('desktop')}
-              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 ${
-                viewMode === 'desktop'
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 ${viewMode === 'desktop'
                   ? 'bg-wedding-pink-dark text-white shadow-md'
                   : 'text-gray-400 hover:text-white'
-              }`}
+                }`}
             >
               <Monitor className="w-4 h-4" />
               Desktop Grid
@@ -161,9 +159,8 @@ export default function PreviewModal({
             <div className="flex items-center bg-[#251B1E] border border-white/5 p-1 rounded-2xl gap-1">
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className={`p-2.5 rounded-xl transition-colors ${
-                  isPlaying ? 'bg-wedding-gold-accent text-wedding-charcoal-dark' : 'text-gray-300 hover:text-white'
-                }`}
+                className={`p-2.5 rounded-xl transition-colors ${isPlaying ? 'bg-wedding-gold-accent text-wedding-charcoal-dark' : 'text-gray-300 hover:text-white'
+                  }`}
                 title={isPlaying ? 'Pause Slideshow' : 'Play Slideshow'}
               >
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -171,9 +168,8 @@ export default function PreviewModal({
               <div className="h-6 w-px bg-white/10 mx-1"></div>
               <button
                 onClick={() => setSoundOn(!soundOn)}
-                className={`p-2.5 rounded-xl transition-colors text-gray-300 hover:text-white ${
-                  soundOn ? 'text-wedding-gold-light' : ''
-                }`}
+                className={`p-2.5 rounded-xl transition-colors text-gray-300 hover:text-white ${soundOn ? 'text-wedding-gold-light' : ''
+                  }`}
                 title="Toggle Wedding Music (Simulated)"
               >
                 {soundOn ? <Volume2 className="w-4 h-4 animate-bounce" /> : <VolumeX className="w-4 h-4" />}
@@ -230,7 +226,7 @@ export default function PreviewModal({
               <div className="relative p-3.5 bg-gradient-to-b from-[#E2B755] via-[#A88024] to-[#E2B755] rounded-[52px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] border border-wedding-gold-accent/40">
                 {/* Smartphone Internal border */}
                 <div className="bg-[#0A0507] rounded-[42px] overflow-hidden relative border-4 border-[#120B0D]">
-                  
+
                   {/* Speaker & camera sensor bar notch */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#120B0D] rounded-b-2xl z-50 flex items-center justify-center gap-1.5">
                     <div className="w-10 h-1 bg-[#2C2124] rounded-full"></div>
@@ -238,17 +234,17 @@ export default function PreviewModal({
                   </div>
 
                   {/* High fidelity simulation viewport screen */}
-                  <div 
-                    style={{ width: `${mobileWidth}px`, height: `${mobileHeight}px` }} 
+                  <div
+                    style={{ width: `${mobileWidth}px`, height: `${mobileHeight}px` }}
                     className="relative overflow-hidden bg-black select-none"
                   >
                     {currentPage ? (
                       <div className="w-full h-full relative transition-all duration-700 ease-out">
                         {/* Page background image */}
                         {currentPage.backgroundImage && (
-                          <img 
-                            src={getImageUrl(currentPage.backgroundImage)} 
-                            alt="Background card template" 
+                          <img
+                            src={getImageUrl(currentPage.backgroundImage)}
+                            alt="Background card template"
                             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                           />
                         )}
@@ -273,9 +269,7 @@ export default function PreviewModal({
                             >
                               {elem.type === 'text' ? (
                                 (() => {
-                                  const originalFontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
-                                  const isLegacy = originalFontFamily.toLowerCase().startsWith('kap');
-                                  const fontFamily = (isLegacy && selectedLanguage !== 'Gujarati') ? 'Inter' : originalFontFamily;
+                                  const fontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
                                   return (
                                     <div
                                       style={{
@@ -297,9 +291,9 @@ export default function PreviewModal({
                                   );
                                 })()
                               ) : (
-                                <img 
-                                  src={getImageUrl(elem.imagePath)} 
-                                  alt="Icon Graphic decal" 
+                                <img
+                                  src={getImageUrl(elem.imagePath)}
+                                  alt="Icon Graphic decal"
                                   className="w-full h-full object-contain pointer-events-none select-none"
                                   onError={(e) => {
                                     e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='%23FFD1D7'/><text x='50' y='55' font-size='24' text-anchor='middle'>🌺</text></svg>";
@@ -323,9 +317,8 @@ export default function PreviewModal({
                       <button
                         key={i}
                         onClick={() => setActiveIndex(i)}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${
-                          activeIndex === i ? 'w-5 bg-wedding-gold-accent shadow-sm' : 'w-1.5 bg-white/40'
-                        }`}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${activeIndex === i ? 'w-5 bg-wedding-gold-accent shadow-sm' : 'w-1.5 bg-white/40'
+                          }`}
                       ></button>
                     ))}
                   </div>
@@ -369,8 +362,8 @@ export default function PreviewModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-6 justify-center">
               {pages.map((p, idx) => (
-                <div 
-                  key={p.id} 
+                <div
+                  key={p.id}
                   className="flex flex-col items-center gap-3 bg-[#181113]/90 border border-white/5 p-4 rounded-3xl hover:border-wedding-pink-medium/40 transition-all hover:shadow-2xl hover:scale-[1.03] group duration-300 cursor-pointer"
                   onClick={() => {
                     setViewMode('mobile');
@@ -385,15 +378,15 @@ export default function PreviewModal({
                   </div>
 
                   {/* Thumbnail Scaled view box */}
-                  <div 
-                    style={{ width: `${desktopCardWidth}px`, height: `${desktopCardHeight}px` }} 
+                  <div
+                    style={{ width: `${desktopCardWidth}px`, height: `${desktopCardHeight}px` }}
                     className="relative overflow-hidden bg-[#0A0507] border border-white/10 rounded-2xl shadow-md pointer-events-none select-none"
                   >
                     {p.backgroundImage && (
-                      <img 
-                        src={getImageUrl(p.backgroundImage)} 
-                        alt="Bg template" 
-                        className="absolute inset-0 w-full h-full object-cover pointer-events-none" 
+                      <img
+                        src={getImageUrl(p.backgroundImage)}
+                        alt="Bg template"
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                       />
                     )}
 
@@ -416,9 +409,7 @@ export default function PreviewModal({
                         >
                           {elem.type === 'text' ? (
                             (() => {
-                              const originalFontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
-                              const isLegacy = originalFontFamily.toLowerCase().startsWith('kap');
-                              const fontFamily = (isLegacy && selectedLanguage !== 'Gujarati') ? 'Inter' : originalFontFamily;
+                              const fontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
                               return (
                                 <div
                                   style={{
@@ -440,9 +431,9 @@ export default function PreviewModal({
                               );
                             })()
                           ) : (
-                            <img 
-                              src={getImageUrl(elem.imagePath)} 
-                              alt="Element Graphic icon" 
+                            <img
+                              src={getImageUrl(elem.imagePath)}
+                              alt="Element Graphic icon"
                               className="w-full h-full object-contain pointer-events-none select-none"
                               onError={(e) => {
                                 e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='%23FFD1D7'/><text x='50' y='55' font-size='24' text-anchor='middle'>🌺</text></svg>";
