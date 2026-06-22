@@ -12,7 +12,8 @@ async function proxyRequest(req: NextRequest, params: { path?: string[] }) {
 
   // Preserve query string
   const searchParams = req.nextUrl.searchParams.toString();
-  const backendUrl = `${BACKEND_URL}/${backendPath}${searchParams ? `?${searchParams}` : ''}`;
+  const cleanBackendUrl = BACKEND_URL.endsWith('/') ? BACKEND_URL.slice(0, -1) : BACKEND_URL;
+  const backendUrl = `${cleanBackendUrl}/${backendPath}${searchParams ? `?${searchParams}` : ''}`;
 
   // Forward headers the backend needs, stripping host so it doesn't conflict
   const forwardHeaders: Record<string, string> = {

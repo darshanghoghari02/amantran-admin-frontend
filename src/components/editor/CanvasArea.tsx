@@ -816,7 +816,9 @@ export default function CanvasArea() {
                     {/* ── Text ── */}
                     {isText ? (
                       (() => {
-                        const fontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
+                        const originalFontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
+                        const isLegacy = originalFontFamily.toLowerCase().startsWith('kap');
+                        const fontFamily = (isLegacy && selectedLanguage !== 'Gujarati') ? 'Inter' : originalFontFamily;
                         return (
                           <div
                             className="text-actual-content"

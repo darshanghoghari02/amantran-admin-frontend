@@ -73,7 +73,7 @@ export default function RightPanel() {
         ? template.languages 
         : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
       
-      const translations = await translateToAll(elementText.trim(), selectedLanguage, langs);
+      const translations = await translateToAll(elementText.trim(), 'auto', langs);
       
       updateElement(element.id, { 
         text: translations['English'] || elementText.trim(),

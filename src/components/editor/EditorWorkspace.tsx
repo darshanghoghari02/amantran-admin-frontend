@@ -196,7 +196,7 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
               if (!needsTranslation || !englishText.trim()) return elem;
 
               try {
-                const translatedVal = await translateText(englishText, targetLang, 'English');
+                const translatedVal = await translateText(englishText, targetLang, 'auto');
                 const newTranslations = {
                   ...(elem.translations || {}),
                   [targetLang]: translatedVal
