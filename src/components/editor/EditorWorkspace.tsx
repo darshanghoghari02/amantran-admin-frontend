@@ -163,10 +163,13 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
       const needsTrans = page.elements.some((elem) => {
         if (elem.type !== 'text') return false;
         const currentTranslation = elem.translations?.[targetLang];
-        const englishText = elem.translations?.['English'] || elem.text || '';
+        const baseText = elem.text || '';
+        const englishText = elem.translations?.['English'] || baseText;
         return (
-          targetLang !== 'English' &&
-          (!currentTranslation || currentTranslation.trim() === '' || currentTranslation === englishText)
+          !currentTranslation || 
+          currentTranslation.trim() === '' || 
+          currentTranslation === englishText || 
+          currentTranslation === baseText
         );
       });
       if (needsTrans) {
@@ -187,23 +190,26 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
               if (elem.type !== 'text') return elem;
 
               const currentTranslation = elem.translations?.[targetLang];
-              const englishText = elem.translations?.['English'] || elem.text || '';
+              const baseText = elem.text || '';
+              const englishText = elem.translations?.['English'] || baseText;
 
               const needsTranslation =
-                targetLang !== 'English' &&
-                (!currentTranslation || currentTranslation.trim() === '' || currentTranslation === englishText);
+                !currentTranslation || 
+                currentTranslation.trim() === '' || 
+                currentTranslation === englishText || 
+                currentTranslation === baseText;
 
-              if (!needsTranslation || !englishText.trim()) return elem;
+              if (!needsTranslation || !baseText.trim()) return elem;
 
               try {
-                const translatedVal = await translateText(englishText, targetLang, 'auto');
+                const translatedVal = await translateText(baseText, targetLang, 'auto');
                 const newTranslations = {
                   ...(elem.translations || {}),
                   [targetLang]: translatedVal
                 };
                 return {
                   ...elem,
-                  text: newTranslations['English'] || englishText,
+                  text: newTranslations['English'] || baseText,
                   translations: newTranslations
                 };
               } catch (err) {

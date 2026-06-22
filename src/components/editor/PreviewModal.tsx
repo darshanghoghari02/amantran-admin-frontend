@@ -273,7 +273,9 @@ export default function PreviewModal({
                             >
                               {elem.type === 'text' ? (
                                 (() => {
-                                  const fontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
+                                  const originalFontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
+                                  const isLegacy = originalFontFamily.toLowerCase().startsWith('kap');
+                                  const fontFamily = (isLegacy && selectedLanguage !== 'Gujarati') ? 'Inter' : originalFontFamily;
                                   return (
                                     <div
                                       style={{
@@ -414,7 +416,9 @@ export default function PreviewModal({
                         >
                           {elem.type === 'text' ? (
                             (() => {
-                              const fontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
+                              const originalFontFamily = elem.languageStyles?.[selectedLanguage]?.fontFamily || elem.fontFamily || 'Rasa';
+                              const isLegacy = originalFontFamily.toLowerCase().startsWith('kap');
+                              const fontFamily = (isLegacy && selectedLanguage !== 'Gujarati') ? 'Inter' : originalFontFamily;
                               return (
                                 <div
                                   style={{
