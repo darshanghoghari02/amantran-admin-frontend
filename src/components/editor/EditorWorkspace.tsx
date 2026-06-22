@@ -209,7 +209,7 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
                 };
                 return {
                   ...elem,
-                  text: newTranslations['English'] || baseText,
+                  text: newTranslations[targetLang] || baseText,
                   translations: newTranslations
                 };
               } catch (err) {
