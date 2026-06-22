@@ -6,8 +6,8 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 // Catch-all proxy: forwards every /api/proxy/... request to the backend
 // Since this runs on the Next.js server, there is NO browser CORS — requests
 // go server → backend directly, bypassing all browser cross-origin restrictions.
-async function proxyRequest(req: NextRequest, params: { path: string[] }) {
-  const pathSegments = params.path || [];
+async function proxyRequest(req: NextRequest, params: { path?: string[] }) {
+  const pathSegments = params?.path || [];
   const backendPath = pathSegments.join('/');
 
   // Preserve query string
@@ -86,22 +86,22 @@ async function proxyRequest(req: NextRequest, params: { path: string[] }) {
 }
 
 // Export all HTTP methods
-export async function GET(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+export async function GET(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   return proxyRequest(req, await context.params);
 }
-export async function POST(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+export async function POST(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   return proxyRequest(req, await context.params);
 }
-export async function PUT(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+export async function PUT(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   return proxyRequest(req, await context.params);
 }
-export async function PATCH(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+export async function PATCH(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   return proxyRequest(req, await context.params);
 }
-export async function DELETE(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+export async function DELETE(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   return proxyRequest(req, await context.params);
 }
-export async function OPTIONS(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+export async function OPTIONS(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   return new NextResponse(null, {
     status: 200,
     headers: {
