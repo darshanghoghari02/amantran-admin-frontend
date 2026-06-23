@@ -1,5 +1,6 @@
 import { API_URL, getImageUrl } from '@/config';
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   PlusCircle,
   Copy,
@@ -74,6 +75,12 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
     }
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
 
   // Form State
@@ -2315,355 +2322,359 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
       )}
 
       {/* Creation Wizard Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-wedding-charcoal-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-wedding-bg border border-wedding-pink-medium/40 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slideUp">
-            <div className="p-6 bg-wedding-charcoal-dark text-white flex justify-between items-center">
-              <h4 className="font-bold text-lg text-wedding-gold-light flex items-center gap-2">
-                <Palette className="w-5 h-5 text-wedding-pink-medium" />
-                {editingTemplate ? 'Edit Template Details' : 'Initialize Wedding Template'}
-              </h4>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-white font-bold text-sm bg-wedding-charcoal-light px-3 py-1.5 rounded-xl transition-colors"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              {/* Row 1: Name and Slug */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Template Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => {
-                      handleNameChange(e.target.value);
-                      if (errors.name) {
-                        setErrors(prev => {
-                          const copy = { ...prev };
-                          delete copy.name;
-                          return copy;
-                        });
-                      }
-                      if (errors.slug) {
-                        setErrors(prev => {
-                          const copy = { ...prev };
-                          delete copy.slug;
-                          return copy;
-                        });
-                      }
-                    }}
-                    placeholder="e.g. Royal Gold Wedding"
-                    className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${errors.name
-                      ? 'border-red-500 focus:ring-red-500/20'
-                      : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
-                      }`}
-                  />
-                  {errors.name && (
-                    <p className="text-xs text-red-500 font-semibold mt-1">{errors.name}</p>
-                  )}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Asset Slug (automatic)</label>
-                  <input
-                    type="text"
-                    value={slug}
-                    onChange={(e) => {
-                      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_'));
-                      if (errors.slug) {
-                        setErrors(prev => {
-                          const copy = { ...prev };
-                          delete copy.slug;
-                          return copy;
-                        });
-                      }
-                    }}
-                    placeholder="e.g. royal_gold_wedding"
-                    className={`w-full px-4 py-3 rounded-2xl text-sm font-mono focus:outline-none focus:ring-2 ${errors.slug
-                      ? 'bg-white border-red-500 focus:ring-red-500/20 text-wedding-charcoal-dark'
-                      : 'bg-gray-50 border border-wedding-pink-medium/30 text-wedding-charcoal-dark/70'
-                      }`}
-                  />
-                  {errors.slug && (
-                    <p className="text-xs text-red-500 font-semibold mt-1">{errors.slug}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Row 2: Category and Options */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Category</label>
-                  <select
-                    value={categoryId}
-                    onChange={(e) => {
-                      setCategoryId(e.target.value);
-                      if (errors.categoryId) {
-                        setErrors(prev => {
-                          const copy = { ...prev };
-                          delete copy.categoryId;
-                          return copy;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${errors.categoryId
-                      ? 'border-red-500 focus:ring-red-500/20'
-                      : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
-                      }`}
+      {isMounted && isModalOpen && typeof document !== 'undefined'
+        ? createPortal(
+            <div className="fixed inset-0 bg-wedding-charcoal-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+              <div className="bg-wedding-bg border border-wedding-pink-medium/40 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slideUp">
+                <div className="p-6 bg-wedding-charcoal-dark text-white flex justify-between items-center">
+                  <h4 className="font-bold text-lg text-wedding-gold-light flex items-center gap-2">
+                    <Palette className="w-5 h-5 text-wedding-pink-medium" />
+                    {editingTemplate ? 'Edit Template Details' : 'Initialize Wedding Template'}
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors font-bold text-sm"
                   >
-                    <option value="">Select Category</option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                  {errors.categoryId && (
-                    <p className="text-xs text-red-500 font-semibold mt-1">{errors.categoryId}</p>
-                  )}
+                    ✕
+                  </button>
                 </div>
 
-                <div className="space-y-1.5 flex flex-col justify-center pl-2">
-                  <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider mb-2">Access Type</label>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={isPremium}
-                      onChange={(e) => setIsPremium(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wedding-pink-dark"></div>
-                    <span className="ml-3 text-sm font-semibold text-wedding-charcoal-dark">
-                      {isPremium ? 'Premium Lock' : 'Free Access'}
-                    </span>
-                  </label>
-                </div>
-
-                <div className="space-y-1.5 flex flex-col justify-center pl-2">
-                  <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider mb-2">Display State</label>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={isActive}
-                      onChange={(e) => setIsActive(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wedding-pink-dark"></div>
-                    <span className="ml-3 text-sm font-semibold text-wedding-charcoal-dark">
-                      {isActive ? 'Published' : 'Hidden Draft'}
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Row 3: Fonts Multi-select */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider block">Assigned Layout Fonts</label>
-                <div className="flex gap-2 flex-wrap bg-white p-4 border border-wedding-pink-medium/30 rounded-2xl">
-                  {fonts.map((f) => {
-                    const isChecked = selectedFonts.includes(f.family);
-                    return (
-                      <button
-                        type="button"
-                        key={f.id}
-                        onClick={() => handleFontSelect(f.family)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${isChecked
-                          ? 'bg-wedding-pink-light border-wedding-pink-dark text-wedding-pink-dark'
-                          : 'border-wedding-pink-medium/35 text-wedding-charcoal-light hover:bg-wedding-pink-light/10'
-                          }`}
-                      >
-                        {f.family}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Row 4: Languages Multi-select */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider block">Assigned Languages</label>
-                <div className="flex gap-2 flex-wrap bg-white p-4 border border-wedding-pink-medium/30 rounded-2xl">
-                  {languages.map((l) => {
-                    const isChecked = selectedLangs.includes(l.name);
-                    return (
-                      <button
-                        type="button"
-                        key={l.id}
-                        onClick={() => handleLangSelect(l.name)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${isChecked
-                          ? 'bg-wedding-pink-light border-wedding-pink-dark text-wedding-pink-dark'
-                          : 'border-wedding-pink-medium/35 text-wedding-charcoal-light hover:bg-wedding-pink-light/10'
-                          }`}
-                      >
-                        {l.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Pricing & Access Control — shown only when isPremium = true */}
-              {isPremium && (
-                <div className="space-y-3 p-4 bg-gradient-to-br from-amber-50 to-yellow-50/30 border border-amber-200/50 rounded-2xl animate-fadeIn">
-                  <h5 className="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-amber-700 fill-amber-300" />
-                    Pricing & Subscription Plans
-                  </h5>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-                    {/* Single Purchase Price */}
-                    <div className="space-y-1.5 sm:col-span-1">
-                      <label className="text-[10px] font-bold text-wedding-charcoal-light uppercase tracking-wider block">Single Purchase Price (INR)</label>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-500 font-bold text-sm">₹</span>
-                        <input
-                          type="number"
-                          min="0"
-                          value={singlePurchasePrice}
-                          onChange={(e) => {
-                            setSinglePurchasePrice(Math.max(0, parseInt(e.target.value) || 0));
-                            if (errors.singlePurchasePrice) {
-                              setErrors(prev => {
-                                const copy = { ...prev };
-                                delete copy.singlePurchasePrice;
-                                return copy;
-                              });
-                            }
-                          }}
-                          className={`w-full pl-8 pr-4 py-2.5 rounded-xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 font-semibold ${errors.singlePurchasePrice
-                            ? 'border-red-500 focus:ring-red-500/20'
-                            : 'border-wedding-pink-medium/30 focus:ring-wedding-pink-dark/20'
-                            }`}
-                        />
-                      </div>
-                      {errors.singlePurchasePrice && (
-                        <p className="text-xs text-red-500 font-semibold mt-1">{errors.singlePurchasePrice}</p>
-                      )}
-                    </div>
-
-                    {/* Dynamic Plan Inclusion Checkboxes */}
-                    <div className="space-y-1.5 sm:col-span-2">
-                      <label className="text-[10px] font-bold text-wedding-charcoal-light uppercase tracking-wider block mb-1">Include in Subscription Plans</label>
-                      <div className="flex gap-2 flex-wrap bg-white p-2.5 border border-wedding-pink-medium/30 rounded-2xl">
-                        {plans.filter(p => p.isActive).length === 0 ? (
-                          <span className="text-xs text-gray-400 font-medium p-1">No active plans available. Add one in Subscription Settings.</span>
-                        ) : (
-                          plans.filter(p => p.isActive).map((plan) => {
-                            const isChecked = selectedPlanIds.includes(plan.id);
-                            return (
-                              <button
-                                type="button"
-                                key={plan.id}
-                                onClick={() => handlePlanToggle(plan.id)}
-                                className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all border ${isChecked
-                                  ? 'bg-blue-50 border-blue-500 text-blue-700 font-black shadow-xs'
-                                  : 'border-wedding-pink-medium/35 text-wedding-charcoal-light hover:bg-wedding-pink-light/10 bg-white'
-                                  }`}
-                              >
-                                {plan.name}
-                              </button>
-                            );
-                          })
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Row 5: Media Files Multi Uploads */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Template Thumbnail</label>
-                  <label className={`border cursor-pointer p-4 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${errors.thumbnailFile
-                    ? 'border-red-500 hover:bg-red-50/10'
-                    : 'border-wedding-pink-medium/40 hover:bg-wedding-pink-light/20'
-                    }`}>
-                    <Upload className="w-5 h-5 text-wedding-pink-dark mb-1" />
-                    <span className="text-[11px] font-bold text-wedding-charcoal-dark text-center">
-                      {thumbnailFile ? thumbnailFile.name : 'Choose Thumbnail File'}
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files ? e.target.files[0] : null;
-                        setThumbnailFile(file);
-                        if (file && errors.thumbnailFile) {
-                          setErrors(prev => {
-                            const copy = { ...prev };
-                            delete copy.thumbnailFile;
-                            return copy;
-                          });
-                        }
-                      }}
-                      className="hidden"
-                    />
-                  </label>
-                  {errors.thumbnailFile && (
-                    <p className="text-xs text-red-500 font-semibold mt-1">{errors.thumbnailFile}</p>
-                  )}
-                </div>
-
-                {!editingTemplate && (
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Page Backgrounds (Multiple)</label>
-                    <label className={`border cursor-pointer p-4 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${errors.bgFiles
-                      ? 'border-red-500 hover:bg-red-50/10'
-                      : 'border-wedding-pink-medium/40 hover:bg-wedding-pink-light/20'
-                      }`}>
-                      <Upload className="w-5 h-5 text-wedding-pink-dark mb-1" />
-                      <span className="text-[11px] font-bold text-wedding-charcoal-dark text-center">
-                        {bgFiles ? `${bgFiles.length} files selected` : 'Select Page Backgrounds'}
-                      </span>
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                  {/* Row 1: Name and Slug */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Template Name</label>
                       <input
-                        type="file"
-                        accept="image/*"
-                        multiple
+                        type="text"
+                        value={name}
                         onChange={(e) => {
-                          const files = e.target.files;
-                          setBgFiles(files);
-                          if (files && files.length > 0 && errors.bgFiles) {
+                          handleNameChange(e.target.value);
+                          if (errors.name) {
                             setErrors(prev => {
                               const copy = { ...prev };
-                              delete copy.bgFiles;
+                              delete copy.name;
+                              return copy;
+                            });
+                          }
+                          if (errors.slug) {
+                            setErrors(prev => {
+                              const copy = { ...prev };
+                              delete copy.slug;
                               return copy;
                             });
                           }
                         }}
-                        className="hidden"
+                        placeholder="e.g. Royal Gold Wedding"
+                        className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${errors.name
+                          ? 'border-red-500 focus:ring-red-500/20'
+                          : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
+                          }`}
                       />
-                    </label>
-                    {errors.bgFiles && (
-                      <p className="text-xs text-red-500 font-semibold mt-1">{errors.bgFiles}</p>
+                      {errors.name && (
+                        <p className="text-xs text-red-500 font-semibold mt-1">{errors.name}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Asset Slug (automatic)</label>
+                      <input
+                        type="text"
+                        value={slug}
+                        onChange={(e) => {
+                          setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_'));
+                          if (errors.slug) {
+                            setErrors(prev => {
+                              const copy = { ...prev };
+                              delete copy.slug;
+                              return copy;
+                            });
+                          }
+                        }}
+                        placeholder="e.g. royal_gold_wedding"
+                        className={`w-full px-4 py-3 rounded-2xl text-sm font-mono focus:outline-none focus:ring-2 ${errors.slug
+                          ? 'bg-white border-red-500 focus:ring-red-500/20 text-wedding-charcoal-dark'
+                          : 'bg-gray-50 border border-wedding-pink-medium/30 text-wedding-charcoal-dark/70'
+                          }`}
+                      />
+                      {errors.slug && (
+                        <p className="text-xs text-red-500 font-semibold mt-1">{errors.slug}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Row 2: Category and Options */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Category</label>
+                      <select
+                        value={categoryId}
+                        onChange={(e) => {
+                          setCategoryId(e.target.value);
+                          if (errors.categoryId) {
+                            setErrors(prev => {
+                              const copy = { ...prev };
+                              delete copy.categoryId;
+                              return copy;
+                            });
+                          }
+                        }}
+                        className={`w-full px-4 py-3 rounded-2xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 ${errors.categoryId
+                          ? 'border-red-500 focus:ring-red-500/20'
+                          : 'border-wedding-pink-medium/40 focus:ring-wedding-pink-dark/20'
+                          }`}
+                      >
+                        <option value="">Select Category</option>
+                        {categories.map((c) => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                      </select>
+                      {errors.categoryId && (
+                        <p className="text-xs text-red-500 font-semibold mt-1">{errors.categoryId}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5 flex flex-col justify-center pl-2">
+                      <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider mb-2">Access Type</label>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isPremium}
+                          onChange={(e) => setIsPremium(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wedding-pink-dark"></div>
+                        <span className="ml-3 text-sm font-semibold text-wedding-charcoal-dark">
+                          {isPremium ? 'Premium Lock' : 'Free Access'}
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="space-y-1.5 flex flex-col justify-center pl-2">
+                      <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider mb-2">Display State</label>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isActive}
+                          onChange={(e) => setIsActive(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wedding-pink-dark"></div>
+                        <span className="ml-3 text-sm font-semibold text-wedding-charcoal-dark">
+                          {isActive ? 'Published' : 'Hidden Draft'}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Fonts Multi-select */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider block">Assigned Layout Fonts</label>
+                    <div className="flex gap-2 flex-wrap bg-white p-4 border border-wedding-pink-medium/30 rounded-2xl">
+                      {fonts.map((f) => {
+                        const isChecked = selectedFonts.includes(f.family);
+                        return (
+                          <button
+                            type="button"
+                            key={f.id}
+                            onClick={() => handleFontSelect(f.family)}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${isChecked
+                              ? 'bg-wedding-pink-light border-wedding-pink-dark text-wedding-pink-dark shadow-xs'
+                              : 'bg-wedding-bg border-wedding-pink-medium/55 text-wedding-charcoal-light/95 hover:bg-wedding-pink-light/35 hover:border-wedding-pink-medium/80'
+                              }`}
+                          >
+                            {f.family}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Row 4: Languages Multi-select */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider block">Assigned Languages</label>
+                    <div className="flex gap-2 flex-wrap bg-white p-4 border border-wedding-pink-medium/30 rounded-2xl">
+                      {languages.map((l) => {
+                        const isChecked = selectedLangs.includes(l.name);
+                        return (
+                          <button
+                            type="button"
+                            key={l.id}
+                            onClick={() => handleLangSelect(l.name)}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${isChecked
+                              ? 'bg-wedding-pink-light border-wedding-pink-dark text-wedding-pink-dark shadow-xs'
+                              : 'bg-wedding-bg border-wedding-pink-medium/55 text-wedding-charcoal-light/95 hover:bg-wedding-pink-light/35 hover:border-wedding-pink-medium/80'
+                              }`}
+                          >
+                            {l.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Pricing & Access Control — shown only when isPremium = true */}
+                  {isPremium && (
+                    <div className="space-y-3 p-4 bg-gradient-to-br from-amber-50 to-yellow-50/30 border border-amber-200/50 rounded-2xl animate-fadeIn">
+                      <h5 className="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-amber-700 fill-amber-300" />
+                        Pricing & Subscription Plans
+                      </h5>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                        {/* Single Purchase Price */}
+                        <div className="space-y-1.5 sm:col-span-1">
+                          <label className="text-[10px] font-bold text-wedding-charcoal-light uppercase tracking-wider block">Single Purchase Price (INR)</label>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-500 font-bold text-sm">₹</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={singlePurchasePrice}
+                              onChange={(e) => {
+                                setSinglePurchasePrice(Math.max(0, parseInt(e.target.value) || 0));
+                                if (errors.singlePurchasePrice) {
+                                  setErrors(prev => {
+                                    const copy = { ...prev };
+                                    delete copy.singlePurchasePrice;
+                                    return copy;
+                                  });
+                                }
+                              }}
+                              className={`w-full pl-8 pr-4 py-2.5 rounded-xl bg-white border text-wedding-charcoal-dark text-sm focus:outline-none focus:ring-2 font-semibold ${errors.singlePurchasePrice
+                                ? 'border-red-500 focus:ring-red-500/20'
+                                : 'border-wedding-pink-medium/30 focus:ring-wedding-pink-dark/20'
+                                }`}
+                            />
+                          </div>
+                          {errors.singlePurchasePrice && (
+                            <p className="text-xs text-red-500 font-semibold mt-1">{errors.singlePurchasePrice}</p>
+                          )}
+                        </div>
+
+                        {/* Dynamic Plan Inclusion Checkboxes */}
+                        <div className="space-y-1.5 sm:col-span-2">
+                          <label className="text-[10px] font-bold text-wedding-charcoal-light uppercase tracking-wider block mb-1">Include in Subscription Plans</label>
+                          <div className="flex gap-2 flex-wrap bg-white p-2.5 border border-wedding-pink-medium/30 rounded-2xl">
+                            {plans.filter(p => p.isActive).length === 0 ? (
+                              <span className="text-xs text-gray-400 font-medium p-1">No active plans available. Add one in Subscription Settings.</span>
+                            ) : (
+                              plans.filter(p => p.isActive).map((plan) => {
+                                const isChecked = selectedPlanIds.includes(plan.id);
+                                return (
+                                  <button
+                                    type="button"
+                                    key={plan.id}
+                                    onClick={() => handlePlanToggle(plan.id)}
+                                    className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all border ${isChecked
+                                      ? 'bg-blue-50 border-blue-500 text-blue-700 font-black shadow-xs'
+                                      : 'bg-wedding-bg border-wedding-pink-medium/55 text-wedding-charcoal-light/95 hover:bg-wedding-pink-light/35 hover:border-wedding-pink-medium/80'
+                                      }`}
+                                  >
+                                    {plan.name}
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Row 5: Media Files Multi Uploads */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Template Thumbnail</label>
+                      <label className={`border-2 border-dashed cursor-pointer p-5 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${errors.thumbnailFile
+                        ? 'border-red-500 bg-red-50/10 hover:bg-red-50/20'
+                        : 'border-wedding-pink-medium/50 hover:border-wedding-pink-dark/50 hover:bg-wedding-pink-light/10 shadow-xs'
+                        }`}>
+                        <Upload className="w-5 h-5 text-wedding-pink-dark mb-1" />
+                        <span className="text-[11px] font-bold text-wedding-charcoal-dark text-center">
+                          {thumbnailFile ? thumbnailFile.name : 'Choose Thumbnail File'}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files ? e.target.files[0] : null;
+                            setThumbnailFile(file);
+                            if (file && errors.thumbnailFile) {
+                              setErrors(prev => {
+                                const copy = { ...prev };
+                                delete copy.thumbnailFile;
+                                return copy;
+                              });
+                            }
+                          }}
+                          className="hidden"
+                        />
+                      </label>
+                      {errors.thumbnailFile && (
+                        <p className="text-xs text-red-500 font-semibold mt-1">{errors.thumbnailFile}</p>
+                      )}
+                    </div>
+
+                    {!editingTemplate && (
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-wedding-charcoal-light uppercase tracking-wider">Page Backgrounds (Multiple)</label>
+                        <label className={`border-2 border-dashed cursor-pointer p-5 rounded-2xl flex flex-col items-center justify-center transition-all bg-white ${errors.bgFiles
+                          ? 'border-red-500 bg-red-50/10 hover:bg-red-50/20'
+                          : 'border-wedding-pink-medium/50 hover:border-wedding-pink-dark/50 hover:bg-wedding-pink-light/10 shadow-xs'
+                          }`}>
+                          <Upload className="w-5 h-5 text-wedding-pink-dark mb-1" />
+                          <span className="text-[11px] font-bold text-wedding-charcoal-dark text-center">
+                            {bgFiles ? `${bgFiles.length} files selected` : 'Select Page Backgrounds'}
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              setBgFiles(files);
+                              if (files && files.length > 0 && errors.bgFiles) {
+                                  setErrors(prev => {
+                                    const copy = { ...prev };
+                                    delete copy.bgFiles;
+                                    return copy;
+                                  });
+                                }
+                              }}
+                            className="hidden"
+                          />
+                        </label>
+                        {errors.bgFiles && (
+                          <p className="text-xs text-red-500 font-semibold mt-1">{errors.bgFiles}</p>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
 
-              {/* Submit Buttons */}
-              <div className="pt-4 border-t border-wedding-pink-medium/20 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-3 rounded-2xl bg-gray-100 text-wedding-charcoal-light hover:bg-gray-200 text-sm font-bold transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={uploading}
-                  className="px-6 py-3 rounded-2xl bg-wedding-pink-dark hover:bg-[#a0525e] text-white text-sm font-bold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {uploading ? 'Updating details...' : editingTemplate ? 'Update Details' : 'Generate Template'}
-                </button>
+                  {/* Submit Buttons */}
+                  <div className="pt-4 border-t border-wedding-pink-medium/20 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="px-5 py-3 rounded-2xl bg-wedding-pink-light/40 border border-wedding-pink-medium/30 text-wedding-charcoal-light hover:bg-wedding-pink-light/80 hover:text-wedding-pink-dark text-sm font-bold transition-all duration-300"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={uploading}
+                      className="px-6 py-3 rounded-2xl bg-wedding-pink-dark hover:bg-[#a0525e] text-white text-sm font-bold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {uploading ? 'Updating details...' : editingTemplate ? 'Update Details' : 'Generate Template'}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

@@ -291,28 +291,30 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
     switch (autosaveStatus) {
       case 'saving':
         return (
-          <span className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-lg uppercase shadow-sm">
-            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            Auto-Saving...
+          <span className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-lg uppercase shadow-sm" title="Auto-Saving...">
+            <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
+            <span className="hidden lg:inline">Auto-Saving...</span>
           </span>
         );
       case 'saved':
         return (
-          <span className="flex items-center gap-1.5 px-3 py-1 bg-green-50 border border-green-200 text-green-700 text-xs font-bold rounded-lg uppercase shadow-sm">
+          <span className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1 bg-green-50 border border-green-200 text-green-700 text-xs font-bold rounded-lg uppercase shadow-sm" title="Saved Successfully">
             <Check className="w-3.5 h-3.5 text-green-600 stroke-[3]" />
-            Saved Successfully
+            <span className="hidden lg:inline">Saved Successfully</span>
           </span>
         );
       case 'error':
         return (
-          <span className="flex items-center gap-1.5 px-3 py-1 bg-red-50 border border-red-200 text-red-600 text-xs font-bold rounded-lg uppercase shadow-sm">
-            ✕ Save Failed
+          <span className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1 bg-red-50 border border-red-200 text-red-600 text-xs font-bold rounded-lg uppercase shadow-sm" title="Save Failed">
+            <span className="font-bold text-red-600">✕</span>
+            <span className="hidden lg:inline ml-0.5">Save Failed</span>
           </span>
         );
       default:
         return (
-          <span className="flex items-center gap-1.5 px-3 py-1 bg-wedding-charcoal-light border border-white/10 text-gray-300 text-xs font-bold rounded-lg uppercase shadow-sm">
-            ⚡ Auto-Save Active
+          <span className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1 bg-wedding-charcoal-light border border-white/10 text-gray-300 text-xs font-bold rounded-lg uppercase shadow-sm" title="Auto-Save Active">
+            <span className="text-wedding-gold-light font-mono text-[10px]">⚡</span>
+            <span className="hidden lg:inline">Auto-Save Active</span>
           </span>
         );
     }
@@ -321,26 +323,26 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden bg-wedding-bg">
       {/* 1. Designer Header Toolbar */}
-      <div className="h-16 bg-wedding-charcoal-dark text-white px-6 flex items-center justify-between border-b border-wedding-pink-medium/10 shrink-0">
-        <div className="flex items-center gap-4">
+      <div className="h-16 bg-wedding-charcoal-dark text-white px-3 sm:px-6 flex items-center justify-between border-b border-wedding-pink-medium/10 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 max-w-[25%] sm:max-w-[30%]">
           <button
             onClick={onClose}
-            className="p-2 hover:bg-wedding-charcoal-light text-wedding-gold-light hover:text-white rounded-xl transition-colors flex items-center justify-center"
+            className="p-2 hover:bg-wedding-charcoal-light text-wedding-gold-light hover:text-white rounded-xl transition-colors flex items-center justify-center shrink-0"
             title="Return to templates directory"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
 
-          <div>
-            <h3 className="text-sm font-extrabold tracking-tight text-wedding-gold-light uppercase leading-none">
+          <div className="min-w-0">
+            <h3 className="text-xs sm:text-sm font-extrabold tracking-tight text-wedding-gold-light uppercase leading-none truncate" title={template.name}>
               {template.name}
             </h3>
-            <p className="text-[10px] text-gray-400 mt-1 font-mono">{template.slug}</p>
+            <p className="text-[9px] sm:text-[10px] text-gray-400 mt-1 font-mono truncate" title={template.slug}>{template.slug}</p>
           </div>
         </div>
 
         {/* Center: Undo/Redo & Zoom Adjusters */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <div className="flex items-center gap-1 bg-wedding-charcoal-light/45 p-1 rounded-xl border border-wedding-pink-medium/10">
             <button
               onClick={undo}
@@ -361,7 +363,7 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
           </div>
 
           {/* View Zoom Controller */}
-          <div className="flex items-center gap-2 bg-wedding-charcoal-light/45 px-3 py-1.5 rounded-xl border border-wedding-pink-medium/10 text-xs font-bold text-gray-300">
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-wedding-charcoal-light/45 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl border border-wedding-pink-medium/10 text-xs font-bold text-gray-300">
             <button
               onClick={() => setZoom(zoom - 5)}
               className="hover:text-white transition-colors"
@@ -369,7 +371,7 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
-            <span className="w-12 text-center select-none">{zoom}%</span>
+            <span className="w-10 sm:w-12 text-center select-none text-[11px] sm:text-xs">{zoom}%</span>
             <button
               onClick={() => setZoom(zoom + 5)}
               className="hover:text-white transition-colors"
@@ -381,16 +383,16 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
         </div>
 
         {/* Right: Autosave status indicator, Language, Live Preview, and Save button */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           {getSyncStateBadge()}
 
           {/* Language dropdown */}
-          <div className="flex items-center gap-1.5 bg-[#251B1E] px-3.5 py-2 rounded-xl border border-white/5 text-xs font-bold text-gray-300">
-            <Languages className="w-4 h-4 text-wedding-gold-light" />
+          <div className="flex items-center gap-1 bg-[#251B1E] px-2 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-white/5 text-[11px] sm:text-xs font-bold text-gray-300">
+            <Languages className="w-3.5 h-3.5 text-wedding-gold-light" />
             <select
               value={selectedLanguage}
               onChange={(e) => handleLanguageChange(e.target.value)}
-              className="bg-transparent text-xs font-bold text-gray-300 focus:outline-none cursor-pointer pr-1"
+              className="bg-transparent text-[11px] sm:text-xs font-bold text-gray-300 focus:outline-none cursor-pointer pr-1"
             >
               {(template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'])
                 .filter((lang) => activeSystemLanguages.length === 0 || activeSystemLanguages.includes(lang) || lang === 'English')
@@ -405,19 +407,21 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
           {/* Live Preview Button */}
           <button
             onClick={() => setIsPreviewOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 bg-wedding-pink-dark hover:bg-wedding-pink-medium text-white text-xs font-extrabold rounded-xl transition-all duration-300 shadow-md shadow-wedding-pink-dark/10 transform hover:-translate-y-0.5"
+            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-wedding-pink-dark hover:bg-wedding-pink-medium text-white text-xs font-extrabold rounded-xl transition-all duration-300 shadow-md shadow-wedding-pink-dark/10 transform hover:-translate-y-0.5"
+            title="Live Preview"
           >
-            <Eye className="w-4 h-4" />
-            Live Preview
+            <Eye className="w-4 h-4 text-white" />
+            <span className="hidden md:inline">Live Preview</span>
           </button>
 
           <button
             onClick={handleManualSave}
             disabled={savingManual}
-            className="flex items-center gap-1.5 px-5 py-2.5 bg-wedding-gold-accent hover:bg-wedding-gold-dark text-wedding-charcoal-dark text-xs font-extrabold rounded-xl transition-all duration-300 shadow-md shadow-wedding-gold-accent/10 transform hover:-translate-y-0.5"
+            className="flex items-center gap-1.5 px-3 py-2 sm:px-5 sm:py-2.5 bg-wedding-gold-accent hover:bg-wedding-gold-dark text-wedding-charcoal-dark text-xs font-extrabold rounded-xl transition-all duration-300 shadow-md shadow-wedding-gold-accent/10 transform hover:-translate-y-0.5"
+            title="Save Draft"
           >
             <Save className="w-4 h-4" />
-            {savingManual ? 'Syncing...' : 'Save Draft'}
+            <span className="hidden md:inline">{savingManual ? 'Syncing...' : 'Save Draft'}</span>
           </button>
         </div>
       </div>

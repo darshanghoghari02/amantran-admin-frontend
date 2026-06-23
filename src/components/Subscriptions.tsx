@@ -782,7 +782,7 @@ export default function Subscriptions({ currentUser }: SubscriptionsProps) {
                                 onClick={() => toggleCategoryInclusion(plan.id, cat.id)}
                                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${isChecked
                                   ? 'bg-blue-50 border-blue-500 text-blue-700 font-black shadow-xs'
-                                  : 'border-wedding-pink-medium/35 bg-white text-wedding-charcoal-light hover:bg-wedding-pink-light/10'
+                                  : 'bg-wedding-bg border-wedding-pink-medium/55 text-wedding-charcoal-light/95 hover:bg-wedding-pink-light/35 hover:border-wedding-pink-medium/80'
                                   }`}
                               >
                                 {cat.name}
@@ -806,7 +806,7 @@ export default function Subscriptions({ currentUser }: SubscriptionsProps) {
                                 onClick={() => toggleTemplateInclusion(plan.id, tpl.id)}
                                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${isChecked
                                   ? 'bg-blue-50 border-blue-500 text-blue-700 font-black shadow-xs'
-                                  : 'border-wedding-pink-medium/35 bg-white text-wedding-charcoal-light hover:bg-wedding-pink-light/10'
+                                  : 'bg-wedding-bg border-wedding-pink-medium/55 text-wedding-charcoal-light/95 hover:bg-wedding-pink-light/35 hover:border-wedding-pink-medium/80'
                                   }`}
                               >
                                 {tpl.name}
@@ -1348,7 +1348,7 @@ export default function Subscriptions({ currentUser }: SubscriptionsProps) {
                       key={cat.id}
                       onClick={() => toggleNewPlanCategory(cat.id)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
-                        newPlanCats.includes(cat.id) ? 'bg-blue-50 border-blue-500 text-blue-700 font-black' : 'border-wedding-pink-medium/35 bg-white'
+                        newPlanCats.includes(cat.id) ? 'bg-blue-50 border-blue-500 text-blue-700 font-black' : 'bg-wedding-bg border-wedding-pink-medium/55 text-wedding-charcoal-light/95 hover:bg-wedding-pink-light/35 hover:border-wedding-pink-medium/80'
                       }`}
                     >
                       {cat.name}
@@ -1358,7 +1358,7 @@ export default function Subscriptions({ currentUser }: SubscriptionsProps) {
               </div>
 
               <div className="pt-4 border-t border-wedding-pink-medium/20 flex justify-end gap-3">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-3 rounded-2xl bg-gray-100 text-sm font-bold">Cancel</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-3 rounded-2xl bg-wedding-pink-light/40 border border-wedding-pink-medium/30 text-wedding-charcoal-light hover:bg-wedding-pink-light/80 hover:text-wedding-pink-dark text-sm font-bold transition-all duration-300">Cancel</button>
                 <button type="submit" disabled={creating} className="px-6 py-3 rounded-2xl bg-wedding-pink-dark text-white text-sm font-bold shadow-lg">{creating ? 'Creating...' : 'Create Plan'}</button>
               </div>
             </form>

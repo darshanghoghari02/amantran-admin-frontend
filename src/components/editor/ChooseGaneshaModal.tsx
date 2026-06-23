@@ -120,8 +120,8 @@ export default function ChooseGaneshaModal() {
             onClick={() => handleSelectPreset('preset1', '/assets/images/stickers/ganesh4.png')}
             className={`w-[58px] h-[58px] p-1 bg-white border rounded-[10px] flex items-center justify-center transition-all ${
               selectedKey === 'preset1'
-                ? 'border-[#F94C66] border-[1.5px]'
-                : 'border-gray-300 border-[1.0px]'
+                ? 'border-wedding-pink-dark border-[2px] shadow-xs'
+                : 'border-wedding-pink-medium/40 border-[1.0px] hover:border-wedding-pink-medium/80'
             }`}
           >
             <img
@@ -139,8 +139,8 @@ export default function ChooseGaneshaModal() {
             onClick={() => handleSelectPreset('preset2', '/assets/images/stickers/ganesh2.png')}
             className={`w-[58px] h-[58px] p-1 bg-white border rounded-[10px] flex items-center justify-center transition-all ${
               selectedKey === 'preset2'
-                ? 'border-[#F94C66] border-[1.5px]'
-                : 'border-gray-300 border-[1.0px]'
+                ? 'border-wedding-pink-dark border-[2px] shadow-xs'
+                : 'border-wedding-pink-medium/40 border-[1.0px] hover:border-wedding-pink-medium/80'
             }`}
           >
             <img
@@ -158,8 +158,8 @@ export default function ChooseGaneshaModal() {
             onClick={() => handleSelectPreset('preset3', '/assets/images/stickers/ganesh3.png')}
             className={`w-[58px] h-[58px] p-1 bg-white border rounded-[10px] flex items-center justify-center transition-all ${
               selectedKey === 'preset3'
-                ? 'border-[#F94C66] border-[1.5px]'
-                : 'border-gray-300 border-[1.0px]'
+                ? 'border-wedding-pink-dark border-[2px] shadow-xs'
+                : 'border-wedding-pink-medium/40 border-[1.0px] hover:border-wedding-pink-medium/80'
             }`}
           >
             <img
@@ -187,12 +187,12 @@ export default function ChooseGaneshaModal() {
             disabled={uploading}
             className={`w-[58px] h-[58px] p-1 bg-white border rounded-[10px] flex flex-col items-center justify-center transition-all ${
               selectedKey === 'uploaded'
-                ? 'border-[#F94C66] border-[1.5px]'
-                : 'border-gray-300 border-[1.0px]'
+                ? 'border-wedding-pink-dark border-[2px] shadow-xs'
+                : 'border-wedding-pink-medium/40 border-[1.0px] hover:border-wedding-pink-medium/80'
             }`}
           >
             {uploading ? (
-              <Loader2 className="w-[18px] h-[18px] animate-spin text-[#F94C66]" />
+              <Loader2 className="w-[18px] h-[18px] animate-spin text-wedding-pink-dark" />
             ) : selectedKey === 'uploaded' && customImage ? (
               <img
                 src={getImageUrl(customImage)}
@@ -201,8 +201,8 @@ export default function ChooseGaneshaModal() {
               />
             ) : (
               <>
-                <Upload className="w-[18px] h-[18px] text-gray-700 stroke-[2.5]" />
-                <span className="text-[9px] text-gray-700 font-medium mt-[2px] leading-none">
+                <Upload className="w-[18px] h-[18px] text-wedding-charcoal-light/75 stroke-[2.5]" />
+                <span className="text-[9px] text-wedding-charcoal-light/75 font-bold mt-[2px] leading-none">
                   Upload
                 </span>
               </>
@@ -215,7 +215,7 @@ export default function ChooseGaneshaModal() {
           <button
             type="button"
             onClick={() => setImageChooserOpen(false)}
-            className="flex-1 py-2.5 rounded-full border border-gray-400 bg-white text-black hover:bg-gray-50 text-xs font-bold transition-all"
+            className="flex-1 py-2.5 rounded-full border border-wedding-pink-medium/40 bg-wedding-pink-light/35 text-wedding-charcoal-light hover:bg-[#FFE5E8] hover:text-wedding-pink-dark text-xs font-bold transition-all"
           >
             Cancel
           </button>
@@ -223,7 +223,7 @@ export default function ChooseGaneshaModal() {
             type="button"
             onClick={handleConfirmSelection}
             disabled={!selectedImage || uploading}
-            className="flex-1 py-2.5 rounded-full bg-[#F94C66] hover:bg-[#d83650] disabled:opacity-40 text-white text-xs font-extrabold shadow-sm transition-all"
+            className="flex-1 py-2.5 rounded-full bg-wedding-pink-dark hover:bg-wedding-pink-hover disabled:opacity-40 text-white text-xs font-extrabold shadow-sm transition-all"
           >
             Select
           </button>
