@@ -1560,6 +1560,7 @@ interface CanvasState {
   selectedLanguage: string;
   imageChooserElementId: string | null;
   isImageChooserOpen: boolean;
+  systemLanguages: string[];
 
   // Actions
   setTemplate: (template: Template | null) => void;
@@ -1568,6 +1569,7 @@ interface CanvasState {
   setZoom: (zoom: number) => void;
   setAutosaveStatus: (status: 'idle' | 'saving' | 'saved' | 'error') => void;
   setSelectedLanguage: (lang: string) => void;
+  setSystemLanguages: (langs: string[]) => void;
   setImageChooserOpen: (isOpen: boolean, elementId?: string | null) => void;
 
   // Element Actions
@@ -1660,11 +1662,14 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   imageChooserElementId: null,
   isImageChooserOpen: false,
   currentUserId: null,
+  systemLanguages: [],
 
   setCurrentUserId: (currentUserId) => set({ currentUserId }),
 
   setImageChooserOpen: (isImageChooserOpen, imageChooserElementId = null) =>
     set({ isImageChooserOpen, imageChooserElementId }),
+
+  setSystemLanguages: (systemLanguages) => set({ systemLanguages }),
 
   setTemplate: (template) => {
     const healed = healTemplate(template);
@@ -1734,7 +1739,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   clearHistory: () => set({ undoStack: [], redoStack: [] }),
 
   addElement: (elem) => {
-    const { template, selectedPageIndex, pushHistory } = get();
+    const { template, selectedPageIndex, pushHistory, systemLanguages } = get();
     if (!template) return;
 
     pushHistory();
@@ -1751,7 +1756,9 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
     if (Object.keys(translations).length === 0) {
       const match = getCommonTranslation(elemText);
-      const allLangs = template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
+      const allLangs = systemLanguages && systemLanguages.length > 0
+        ? (systemLanguages.includes('English') ? systemLanguages : ['English', ...systemLanguages])
+        : (template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu']);
       allLangs.forEach(lang => {
         if (match && match[lang]) {
           translations[lang] = match[lang];
@@ -1779,7 +1786,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   },
 
   updateElement: (id, updates, skipHistory = false) => {
-    const { template, selectedPageIndex, pushHistory, selectedLanguage } = get();
+    const { template, selectedPageIndex, pushHistory, selectedLanguage, systemLanguages } = get();
     if (!template) return;
 
     const currentPage = template.pages[selectedPageIndex];
@@ -1812,7 +1819,9 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
           translations[currentLang] = newText;
 
-          const allLangs = template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
+          const allLangs = systemLanguages && systemLanguages.length > 0
+            ? (systemLanguages.includes('English') ? systemLanguages : ['English', ...systemLanguages])
+            : (template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu']);
 
           // Only propagate if all languages currently match the old placeholder text (i.e. they are completely unedited)
           const allSame = allLangs.every(lang => !translations[lang] || translations[lang] === oldText);

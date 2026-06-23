@@ -108,7 +108,8 @@ export default function LeftPanel() {
     updatePageBackground,
     duplicatePage,
     reorderPages,
-    selectedLanguage
+    selectedLanguage,
+    systemLanguages
   } = useCanvasStore();
 
   const [activeTab, setActiveTab] = useState<'info' | 'text' | 'stickers' | 'photos' | 'pages'>('text');
@@ -165,9 +166,9 @@ export default function LeftPanel() {
     }
 
     try {
-      const langs = template.languages && template.languages.length > 0 
-        ? template.languages 
-        : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
+      const langs = systemLanguages && systemLanguages.length > 0
+        ? (systemLanguages.includes('English') ? systemLanguages : ['English', ...systemLanguages])
+        : (template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu']);
       
       const translations = await translateToAll(textVal, 'English', langs);
 
@@ -201,9 +202,9 @@ export default function LeftPanel() {
 
     try {
       const currentLang = selectedLanguage || 'English';
-      const langs = template.languages && template.languages.length > 0 
-        ? template.languages 
-        : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
+      const langs = systemLanguages && systemLanguages.length > 0
+        ? (systemLanguages.includes('English') ? systemLanguages : ['English', ...systemLanguages])
+        : (template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu']);
 
       const translations = await translateToAll(customText.trim(), currentLang, langs);
 
@@ -236,9 +237,9 @@ export default function LeftPanel() {
   const handleAddPresetText = async (preset: typeof PROPER_WEDDING_PRESETS[0]) => {
     setIsTranslating(true);
     try {
-      const langs = template.languages && template.languages.length > 0 
-        ? template.languages 
-        : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
+      const langs = systemLanguages && systemLanguages.length > 0
+        ? (systemLanguages.includes('English') ? systemLanguages : ['English', ...systemLanguages])
+        : (template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu']);
       
       const translations = await translateToAll(preset.text, 'English', langs);
 

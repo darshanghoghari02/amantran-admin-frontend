@@ -28,7 +28,8 @@ export default function RightPanel() {
     sendToBack,
     toggleLock,
     selectedLanguage,
-    currentUserId
+    currentUserId,
+    systemLanguages
   } = useCanvasStore();
 
   const [isTranslating, setIsTranslating] = useState(false);
@@ -69,9 +70,9 @@ export default function RightPanel() {
     if (!elementText || !elementText.trim() || !element) return;
     setIsTranslating(true);
     try {
-      const langs = template.languages && template.languages.length > 0 
-        ? template.languages 
-        : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu'];
+      const langs = systemLanguages && systemLanguages.length > 0
+        ? (systemLanguages.includes('English') ? systemLanguages : ['English', ...systemLanguages])
+        : (template.languages && template.languages.length > 0 ? template.languages : ['English', 'Hindi', 'Gujarati', 'Marathi', 'Tamil', 'Urdu']);
       
       const translations = await translateToAll(elementText.trim(), 'auto', langs);
       
