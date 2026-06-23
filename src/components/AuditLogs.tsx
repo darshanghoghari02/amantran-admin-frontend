@@ -157,6 +157,33 @@ export default function AuditLogs({ currentUser }: AuditLogsProps) {
     return 'bg-gray-50 text-gray-700 border-gray-100';
   };
 
+  const getPageNumbers = () => {
+    const delta = 2; // number of pages on either side of active page
+    const range = [];
+    const rangeWithDots: (number | string)[] = [];
+    let l: number | undefined;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
+        range.push(i);
+      }
+    }
+
+    for (const i of range) {
+      if (l !== undefined) {
+        if (i - l === 2) {
+          rangeWithDots.push(l + 1);
+        } else if (i - l > 2) {
+          rangeWithDots.push('...');
+        }
+      }
+      rangeWithDots.push(i);
+      l = i;
+    }
+
+    return rangeWithDots;
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 animate-fadeIn">
       {/* Upper header section */}
@@ -312,14 +339,24 @@ export default function AuditLogs({ currentUser }: AuditLogsProps) {
                 <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
 
-              <div className="flex gap-1">
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const pNum = i + 1;
+              <div className="flex items-center gap-1">
+                {getPageNumbers().map((pNum, index) => {
+                  if (pNum === '...') {
+                    return (
+                      <span
+                        key={`dots-${index}`}
+                        className="w-7 h-7 sm:w-8.5 sm:h-8.5 flex items-center justify-center text-[10px] sm:text-xs font-bold text-gray-400"
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+
                   const isCurrent = pNum === currentPage;
                   return (
                     <button
                       key={pNum}
-                      onClick={() => handlePageChange(pNum)}
+                      onClick={() => handlePageChange(pNum as number)}
                       className={`w-7 h-7 sm:w-8.5 sm:h-8.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
                         isCurrent
                           ? 'bg-wedding-charcoal-dark border-wedding-charcoal-dark text-wedding-gold-light'
