@@ -129,10 +129,10 @@ function healTemplate(template: Template | null): Template | null {
               translations: {
                 English: '|| OM SHREE GANESHAYA NAMAH ||',
                 Gujarati: '|| શ્રી ગણેશાય નમઃ ||',
-                Hindi: '|| શ્રી ગણેશાય નમઃ ||',
-                Marathi: '|| શ્રી ગણેશાય નમઃ ||',
-                Tamil: '|| શ્રી ગણેશાય નમઃ ||',
-                Urdu: '|| શ્રી ગણેશાય નમઃ ||'
+                Hindi: '',
+                Marathi: '',
+                Tamil: '',
+                Urdu: ''
               }
             },
             {
@@ -157,10 +157,10 @@ function healTemplate(template: Template | null): Template | null {
               translations: {
                 English: 'SHUBH VIVAH',
                 Gujarati: 'શુભ વિવાહ',
-                Hindi: 'શુભ વિવાહ',
-                Marathi: 'શુભ વિવાહ',
-                Tamil: 'શુભ વિવાહ',
-                Urdu: 'શુભ વિવાહ'
+                Hindi: '',
+                Marathi: '',
+                Tamil: '',
+                Urdu: ''
               }
             },
             {
@@ -185,10 +185,10 @@ function healTemplate(template: Template | null): Template | null {
               translations: {
                 English: 'Harmi',
                 Gujarati: 'ચિ. હાર્મી',
-                Hindi: 'ચિ. હાર્મી',
-                Marathi: 'ચિ. હાર્મી',
-                Tamil: 'ચિ. હાર્મી',
-                Urdu: 'ચિ. હાર્મી'
+                Hindi: '',
+                Marathi: '',
+                Tamil: '',
+                Urdu: ''
               }
             },
             {
@@ -213,10 +213,10 @@ function healTemplate(template: Template | null): Template | null {
               translations: {
                 English: 'Weds',
                 Gujarati: 'સંગ',
-                Hindi: 'સંગ',
-                Marathi: 'સંગ',
-                Tamil: 'સંગ',
-                Urdu: 'સંગ'
+                Hindi: '',
+                Marathi: '',
+                Tamil: '',
+                Urdu: ''
               }
             },
             {
@@ -241,10 +241,10 @@ function healTemplate(template: Template | null): Template | null {
               translations: {
                 English: 'Kishan',
                 Gujarati: 'ચિ. કિશન',
-                Hindi: 'ચિ. કિશન',
-                Marathi: 'ચિ. કિશન',
-                Tamil: 'ચિ. કિશન',
-                Urdu: 'ચિ. કિશન'
+                Hindi: '',
+                Marathi: '',
+                Tamil: '',
+                Urdu: ''
               }
             },
             {
@@ -269,10 +269,10 @@ function healTemplate(template: Template | null): Template | null {
               translations: {
                 English: 'Friday, January 23, 2026',
                 Gujarati: 'તા. ૨૩/૦૧/૨૦૨૬, શુક્રવાર',
-                Hindi: 'તા. ૨૩/૦૧/૨૦૨૬, શુક્રવાર',
-                Marathi: 'તા. ૨૩/૦૧/૨૦૨૬, શુક્રવાર',
-                Tamil: 'તા. ૨૩/૦૧/૨૦૨૬, શુક્રવાર',
-                Urdu: 'તા. ૨૩/૦૧/૨૦૨૬, શુક્રવાર'
+                Hindi: '',
+                Marathi: '',
+                Tamil: '',
+                Urdu: ''
               }
             },
             {

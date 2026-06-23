@@ -156,6 +156,32 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
 
     if (!template || !template.pages) return;
 
+    // If switching to English, just update the selectedLanguage — no translation needed
+    if (targetLang === 'English') return;
+
+    // Detect if a translation value looks like it's still in the "default" language
+    // (Gujarati/non-English script identical to baseText or another language's value)
+    const isUntranslated = (
+      currentTranslation: string | undefined,
+      baseText: string,
+      englishText: string,
+      targetLang: string
+    ): boolean => {
+      if (!currentTranslation || currentTranslation.trim() === '') return true;
+      if (currentTranslation === englishText) return true;
+      if (currentTranslation === baseText) return true;
+
+      // If target is NOT Gujarati, but the stored translation contains Gujarati script characters,
+      // it was incorrectly seeded with Gujarati text — force re-translate.
+      if (targetLang !== 'Gujarati') {
+        // Gujarati Unicode block: U+0A80–U+0AFF
+        const hasGujaratiChars = /[\u0A80-\u0AFF]/.test(currentTranslation);
+        if (hasGujaratiChars) return true;
+      }
+
+      return false;
+    };
+
     // Scan all text elements across ALL pages that need translation
     let hasElementsToTranslate = false;
     for (const page of template.pages) {
@@ -165,12 +191,7 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
         const currentTranslation = elem.translations?.[targetLang];
         const baseText = elem.text || '';
         const englishText = elem.translations?.['English'] || baseText;
-        return (
-          !currentTranslation || 
-          currentTranslation.trim() === '' || 
-          currentTranslation === englishText || 
-          currentTranslation === baseText
-        );
+        return isUntranslated(currentTranslation, baseText, englishText, targetLang);
       });
       if (needsTrans) {
         hasElementsToTranslate = true;
@@ -191,18 +212,18 @@ export default function EditorWorkspace({ onClose, currentUser }: EditorWorkspac
 
               const currentTranslation = elem.translations?.[targetLang];
               const baseText = elem.text || '';
+              // Prefer English translation as the source (cleaner, reliable) 
+              // — fall back to baseText if English not set
               const englishText = elem.translations?.['English'] || baseText;
 
-              const needsTranslation =
-                !currentTranslation || 
-                currentTranslation.trim() === '' || 
-                currentTranslation === englishText || 
-                currentTranslation === baseText;
+              const needsTranslation = isUntranslated(currentTranslation, baseText, englishText, targetLang);
 
-              if (!needsTranslation || !baseText.trim()) return elem;
+              if (!needsTranslation || !englishText.trim()) return elem;
 
               try {
-                const translatedVal = await translateText(baseText, targetLang, 'auto');
+                // Always translate FROM English (or best available source) for accuracy
+                const sourceText = englishText;
+                const translatedVal = await translateText(sourceText, targetLang, 'English');
                 const newTranslations = {
                   ...(elem.translations || {}),
                   [targetLang]: translatedVal
