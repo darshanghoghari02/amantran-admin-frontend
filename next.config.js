@@ -19,7 +19,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'tan-quetzal-596149.hostingersite.com',
+        hostname: 'mediumturquoise-spoonbill-121355.hostingersite.com',
         pathname: '/**',
       },
       {
