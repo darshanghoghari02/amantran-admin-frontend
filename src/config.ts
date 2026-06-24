@@ -24,7 +24,8 @@ export const getImageUrl = (path: string | undefined | null) => {
   if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
     return path;
   }
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${ASSETS_URL}${cleanPath}`;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const cleanBase = ASSETS_URL.endsWith('/') ? ASSETS_URL.slice(0, -1) : ASSETS_URL;
+  return `${cleanBase}/${cleanPath}`;
 };
 

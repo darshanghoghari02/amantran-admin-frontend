@@ -19,7 +19,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'mediumturquoise-spoonbill-121355.hostingersite.com',
+        hostname: 'coral-manatee-272086.hostingersite.com',
         pathname: '/**',
       },
       {
