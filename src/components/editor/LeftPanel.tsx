@@ -116,6 +116,7 @@ export default function LeftPanel() {
   const [stickers, setStickers] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   
   // Custom text states
   const [customText, setCustomText] = useState('');
@@ -129,6 +130,19 @@ export default function LeftPanel() {
       '/assets/images/stickers/ganesh3.png',
       '/assets/images/stickers/ganesh4.png'
     ]);
+
+    async function fetchCategories() {
+      try {
+        const res = await fetch(`${API_URL}/api/categories`);
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    }
+    fetchCategories();
   }, []);
 
   if (!template) return null;
@@ -304,9 +318,11 @@ export default function LeftPanel() {
     const formData = new FormData();
     formData.append('file', file);
 
+    const matchedCategory = categories.find(c => c.id === template.categoryId);
+    const catSlug = matchedCategory ? matchedCategory.slug : 'wedding';
+
     try {
-      // Direct call to local asset upload system (routes to backend/assets/images/wedding/royal_wedding)
-      const res = await fetch(`${API_URL}/api/uploads/single?type=template&categorySlug=wedding&templateSlug=${template.slug}`, {
+      const res = await fetch(`${API_URL}/api/uploads/single?type=template&categorySlug=${catSlug}&templateSlug=${template.slug}`, {
         method: 'POST',
         body: formData
       });
@@ -332,8 +348,11 @@ export default function LeftPanel() {
     const formData = new FormData();
     formData.append('file', file);
 
+    const matchedCategory = categories.find(c => c.id === template.categoryId);
+    const catSlug = matchedCategory ? matchedCategory.slug : 'wedding';
+
     try {
-      const res = await fetch(`${API_URL}/api/uploads/single?type=template&categorySlug=wedding&templateSlug=${template.slug}`, {
+      const res = await fetch(`${API_URL}/api/uploads/single?type=template&categorySlug=${catSlug}&templateSlug=${template.slug}`, {
         method: 'POST',
         body: formData
       });
