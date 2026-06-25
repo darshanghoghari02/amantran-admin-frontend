@@ -17,7 +17,8 @@ import {
   Search,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Download
 } from 'lucide-react';
 import { Template, Category, CustomFont, Language, User, SubscriptionPlan } from '../types';
 import { useToastStore } from '../store/toastStore';
@@ -50,6 +51,7 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
   const [selectedCatId, setSelectedCatId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [showArrows, setShowArrows] = useState(false);
 
   const checkScrollable = () => {
@@ -1980,6 +1982,117 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
     }
   };
 
+  const handleExport = (tpl: Template) => {
+    try {
+      const exportData = {
+        name: tpl.name,
+        slug: tpl.slug,
+        categoryId: tpl.categoryId,
+        isPremium: tpl.isPremium,
+        isActive: tpl.isActive,
+        fonts: tpl.fonts || [],
+        languages: tpl.languages || [],
+        thumbnail: tpl.thumbnail,
+        previewImages: tpl.previewImages || [],
+        localAssetPaths: tpl.localAssetPaths || [],
+        pages: tpl.pages || [],
+        singlePurchasePrice: tpl.singlePurchasePrice || 49,
+        includedInMonthlyPlan: tpl.includedInMonthlyPlan !== false,
+        includedInYearlyPlan: tpl.includedInYearlyPlan !== false
+      };
+
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${tpl.slug || 'template'}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      useToastStore.getState().addToast(`Template "${tpl.name}" exported successfully!`, 'success');
+    } catch (err: any) {
+      console.error('Export failed:', err);
+      useToastStore.getState().addToast('Failed to export template.', 'error');
+    }
+  };
+
+  const triggerJsonImport = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleJsonImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const text = event.target?.result as string;
+        const importedData = JSON.parse(text);
+
+        if (!importedData.name || !importedData.pages) {
+          useToastStore.getState().addToast('Invalid template JSON file. Must contain name and pages.', 'error');
+          return;
+        }
+
+        let targetCategoryId = importedData.categoryId;
+        if (!categories.some(c => c.id === targetCategoryId)) {
+          targetCategoryId = categories[0]?.id || '';
+        }
+
+        let targetSlug = importedData.slug || importedData.name.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+        let isSlugConflict = templates.some(t => t.slug === targetSlug);
+        if (isSlugConflict) {
+          targetSlug = `${targetSlug}_import_${Date.now().toString().slice(-4)}`;
+        }
+
+        const newTemplatePayload = {
+          categoryId: targetCategoryId,
+          name: isSlugConflict ? `${importedData.name} (Imported)` : importedData.name,
+          slug: targetSlug,
+          thumbnail: importedData.thumbnail || '',
+          previewImages: importedData.previewImages || [],
+          localAssetPaths: importedData.localAssetPaths || [],
+          isPremium: importedData.isPremium === true,
+          isActive: importedData.isActive !== false,
+          fonts: importedData.fonts || [],
+          languages: importedData.languages || [],
+          pages: importedData.pages || [],
+          singlePurchasePrice: importedData.singlePurchasePrice !== undefined ? Number(importedData.singlePurchasePrice) : 49,
+          includedInMonthlyPlan: importedData.includedInMonthlyPlan !== false,
+          includedInYearlyPlan: importedData.includedInYearlyPlan !== false
+        };
+
+        useToastStore.getState().addToast('Importing template...', 'info');
+
+        const response = await fetch(`${API_URL}/api/templates`, {
+          method: 'POST',
+          headers: authHeaders,
+          body: JSON.stringify(newTemplatePayload)
+        });
+
+        if (!response.ok) {
+          const errData = await response.json();
+          throw new Error(errData.error || 'Failed to save imported template.');
+        }
+
+        const savedTemplate = await response.json();
+        useToastStore.getState().addToast(`Template "${savedTemplate.name}" imported successfully!`, 'success');
+        
+        fetchInitialData();
+      } catch (err: any) {
+        console.error('Import failed:', err);
+        useToastStore.getState().addToast(`Import failed: ${err.message}`, 'error');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const openEditModal = (tpl: Template) => {
     setEditingTemplate(tpl);
     setName(tpl.name);
@@ -2078,6 +2191,27 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
               <PlusCircle className="w-5 h-5" />
               Create Template
             </button>
+          )}
+
+          {/* Import Template Button */}
+          {hasPermission('templates.create') && (
+            <>
+              <button
+                type="button"
+                onClick={triggerJsonImport}
+                className="flex items-center gap-2 px-5 py-3 bg-wedding-pink-light border border-wedding-pink-medium/40 hover:bg-wedding-pink-light/80 text-wedding-pink-dark text-sm font-bold rounded-2xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 shrink-0"
+              >
+                <Upload className="w-4 h-4" />
+                Import JSON
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleJsonImport}
+                accept=".json"
+                className="hidden"
+              />
+            </>
           )}
         </div>
 
@@ -2300,6 +2434,15 @@ export default function TemplatesList({ onOpenEditor, currentUser }: TemplatesLi
                             title="Clone Template"
                           >
                             <Copy className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                        {hasPermission('templates.create') && (
+                          <button
+                            onClick={() => handleExport(tpl)}
+                            className="p-2 text-wedding-charcoal-light hover:text-wedding-pink-dark hover:bg-wedding-pink-light/50 rounded-lg transition-colors border border-wedding-pink-medium/10 animate-scaleIn"
+                            title="Export Template JSON"
+                          >
+                            <Download className="w-3.5 h-3.5" />
                           </button>
                         )}
                         {hasPermission('templates.delete') && (
